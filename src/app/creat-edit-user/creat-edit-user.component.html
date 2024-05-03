@@ -1,0 +1,29 @@
+<form class="user-form" [formGroup]="myForm" (ngSubmit)="onSubmit()">
+  <h2>Добавить пользователя</h2>
+  <mat-form-field class="user-form-width">
+    <input matInput formControlName="name" placeholder="name" />
+    <div *ngIf="myForm.invalid && myForm.pristine && myForm.touched" style="color: brown">
+      Введи имя правильно уцы!
+    </div>
+  </mat-form-field>
+  <mat-form-field class="user-form-width">
+    <mat-label>username</mat-label>
+    <input matInput formControlName="username" placeholder="username"
+  /></mat-form-field>
+
+  <mat-form-field class="user-form-width">
+    <mat-label>Email</mat-label>
+    <input matInput formControlName="email" placeholder="Ex. pat@example.com" />
+  </mat-form-field>
+</form>
+
+<button mat-button (click)="onNoclick()">Закрыть</button>
+<button 
+  mat-button
+  [disabled]="myForm.invalid"
+  color="green"
+  (click)="onSubmit()"
+  type="submit"
+>{{ !!data ? 'Правка': 'Создать'}}
+  
+</button>

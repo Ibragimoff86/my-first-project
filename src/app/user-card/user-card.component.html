@@ -1,0 +1,14 @@
+<div>
+  <mat-card class="user-card">
+    <h2>{{ user.name }}</h2>
+    <p class="id">ID: {{ user.id }}</p>
+    <p class="email">Email: {{ user.email }}</p>
+    <p class="phone">Username: {{ user.username}}</p>
+    <mat-card-actions>
+    
+      <button (click)="onDeleteUser(user.id)" 
+      mat-stroked-button class="deleteButton">Delete</button>
+  <button (click)="editUserCard(user.id)" mat-stroked-button class="editButton">Edit</button>
+    </mat-card-actions>
+  </mat-card>
+</div>
