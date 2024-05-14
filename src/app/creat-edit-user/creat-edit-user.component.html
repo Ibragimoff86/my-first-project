@@ -2,7 +2,10 @@
   <h2>Добавить пользователя</h2>
   <mat-form-field class="user-form-width">
     <input matInput formControlName="name" placeholder="name" />
-    <div *ngIf="myForm.invalid && myForm.pristine && myForm.touched" style="color: brown">
+    <div
+      *ngIf="myForm.invalid && myForm.pristine && myForm.touched"
+      style="color: brown"
+    >
       Введи имя правильно уцы!
     </div>
   </mat-form-field>
@@ -18,12 +21,12 @@
 </form>
 
 <button mat-button (click)="onNoclick()">Закрыть</button>
-<button 
+<button
   mat-button
   [disabled]="myForm.invalid"
   color="green"
   (click)="onSubmit()"
   type="submit"
->{{ !!data ? 'Правка': 'Создать'}}
-  
+>
+  {{ !!data ? "Правка" : "Создать" }}
 </button>

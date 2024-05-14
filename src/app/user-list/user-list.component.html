@@ -1,4 +1,4 @@
-<ng-container  *ngFor="let user of users " | async >
+<ng-container  *ngFor="let user of  users$ | async" >
 
  
   <app-user-card class="user-card-container" [user]="user" 

@@ -10,7 +10,7 @@ import { OnInit } from '@angular/core';
 import { User } from '../user-interface';
 import { Observable, map, pipe, take, takeUntil } from 'rxjs';
 import { Subject } from 'rxjs';
-import { NgFor, NgForOf } from '@angular/common';
+import { CommonModule, NgFor, NgForOf } from '@angular/common';
 import { UserCardComponent } from '../user-card/user-card.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
@@ -21,13 +21,13 @@ import { LocalStorage } from '../services/local-storage.service';
 @Component({
   selector: 'app-user-list',
   standalone: true,
-  imports: [NgForOf, UserCardComponent, MatButtonModule],
+  imports: [UserCardComponent, MatButtonModule, CommonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './user-list.component.html',
   styleUrl: './user-list.component.css',
 })
 export class UserListComponent implements OnInit, OnDestroy {
-  public users = this.userService.users;
+  public users$ = this.userService.users$;
   public destroy$ = new Subject<void>();
 
   constructor(
@@ -40,20 +40,21 @@ export class UserListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const currentUsers = this.localStorage.getItemUsers('users');
-    //  console.log(currentUsers)
 
     if (currentUsers) {
-      this.userService.users = currentUsers;
+      this.userService.users$ = currentUsers;
     }
-    if (this.userService.users.length === 0) {
+    if (!this.userService.users$) {
       this.userApiService
         .getUsers()
         .pipe(takeUntil(this.destroy$))
         .subscribe((data: User[]) => {
-          this.userService.users = [...data];
+          this.userService.setUsers(data)
         });
-      this.localStorage.setItemUsers('users', this.users);
+
+      //this.localStorage.setItemUsers('users', this.users$);
     }
+    
   }
   ngOnDestroy(): void {
     this.destroy$.next();
@@ -62,15 +63,15 @@ export class UserListComponent implements OnInit, OnDestroy {
 
   handleDeletUser(id: number) {
     this.userService.deleteUser(id);
-    this.users = [...this.userService.users];
-    this.cdr.markForCheck();
+    
+    //this.cdr.markForCheck();
+
   }
 
   openDialog(id?: number): void {
     let dialogConfig = new MatDialogConfig<User | undefined>();
     if (id) {
-      dialogConfig.data = this.users.find((user) => user.id === id);
-    }
+      dialogConfig.data = this.userService.getUser(id)
     dialogConfig.height = '70%';
     dialogConfig.disableClose = true;
 
@@ -86,10 +87,11 @@ export class UserListComponent implements OnInit, OnDestroy {
           } else {
             this.userService.addUserCard(data);
           }
-          this.users = [...this.userService.users];
-          this.localStorage.setItemUsers('users', this.users);
-          this.cdr.markForCheck();
+          this.userService.setUsers(data)
+         // this.localStorage.setItemUsers('users', this.users);
+         // this.cdr.markForCheck();
         }
       });
   }
-}
+  }
+  }

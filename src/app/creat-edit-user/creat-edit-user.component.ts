@@ -38,17 +38,14 @@ import { UserService } from '../services/user.service';
   styleUrl: './creat-edit-user.component.css',
 })
 export class CreatEditUserComponent {
-    
-
   constructor(
     private readonly userService: UserService,
     @Inject(MAT_DIALOG_DATA) public readonly data: User,
     private readonly dialogRef: MatDialogRef<CreatEditUserComponent>
-  ) {
-  }
+  ) {}
 
   public myForm: FormGroup = new FormGroup({
-    id: new FormControl(this.data?.id ?? this.createId(this.userService.users) ),
+    id: new FormControl(this.data?.id ?? new Date().getTime()),
     name: new FormControl(this.data?.name ?? null, [
       Validators.required,
       Validators.pattern(/^[a-zA-Z0-9._-]{3,16}$/),
@@ -66,13 +63,10 @@ export class CreatEditUserComponent {
 
   onNoclick() {
     this.dialogRef.close();
-    
   }
 
-createId(users: User[]){// утилита для создания id 
-return Math.max(...users.map((user) => user.id))+1
+  // createId(users: User[]){// утилита для создания id
+  // return Math.max(...users.map((user) => user.id))+1
 
+  // }
 }
-
-}
-
